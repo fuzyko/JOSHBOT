@@ -1,22 +1,35 @@
 # .github/workflows/nag.yml
-name: joshbot-manual
+name: joshbot-manual      # shows up in the Actions tab
 
 on:
-  workflow_dispatch:   # ⬅️  this puts the green "Run workflow" button in Actions
+  workflow_dispatch:      # ➜ puts the “Run workflow” button in GitHub UI
 
 jobs:
   run:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+    steps:
+      # 1 ▸ get the code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2 ▸ Python 3.11
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Show first 10 lines of nagbot.py   # << add this between checkout and install
+      # 3 ▸ sanity check – make sure this is the REST-only file (remove later if you like)
+      - name: Show first 10 lines of nagbot.py
+        run: head -n 10 nagbot.py
+
+      # 4 ▸ install deps and start JOSHBOT
+      - name: Install deps & run
         run: |
-          head -n 10 nagbot.py
           pip install schedule python-dotenv requests
-          python nagbot.py          # <- or josbot.py if you changed the filename
-        env: ${{ secrets }}
+          python nagbot.py
+        env:               # all your secrets are injected here
+          RESEND_API_KEY:   ${{ secrets.RESEND_API_KEY }}
+          FRIEND_EMAIL:     ${{ secrets.FRIEND_EMAIL }}
+          FRIEND_PHONE_SMTP: ${{ secrets.FRIEND_PHONE_SMTP }}
+          FRIEND_PHONE_NUM: ${{ secrets.FRIEND_PHONE_NUM }}
