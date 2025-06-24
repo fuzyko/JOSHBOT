@@ -1,4 +1,3 @@
-simplelogin
 resend
 schedule
 python-dotenv
