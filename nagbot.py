@@ -3,24 +3,21 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ─── CONFIG ───────────────────────────────────────────────────────
-SUBDOMAIN        = "pay.alexschupak.com"          # verified in Resend
-RESEND_API_KEY   = os.getenv("RESEND_API_KEY")    # set in repo Secrets
+SUBDOMAIN = "pay.alexschupak.com"
+RESEND_API_KEY   = os.getenv("RESEND_API_KEY")
 FRIEND_EMAIL     = os.getenv("FRIEND_EMAIL")
-FRIEND_PHONE_SMTP= os.getenv("FRIEND_PHONE_SMTP") # 5551234567@vtext.com
-FRIEND_PHONE_NUM = os.getenv("FRIEND_PHONE_NUM")  # digits only (Textbelt)
+FRIEND_PHONE_SMTP= os.getenv("FRIEND_PHONE_SMTP")   # optional
+FRIEND_PHONE_NUM = os.getenv("FRIEND_PHONE_NUM")    # optional SMS fallback
 
-# ▸ How often it fires  ── change this line
-schedule.every(30).minutes.do(lambda: job())      # e.g. 30→10 for 10 min
-# ──────────────────────────────────────────────────────────────────
+# fire every 30 min – change here ↓
+schedule.every(30).minutes.do(lambda: job())
 
 def random_from() -> str:
-    local = "nag" + "".join(random.choices(string.ascii_lowercase, k=6))
-    return f"{local}@{SUBDOMAIN}"
+    return f"nag{''.join(random.choices(string.ascii_lowercase, k=6))}@{SUBDOMAIN}"
 
-def send_email(from_addr: str, html: str) -> None:
+def send_email(frm: str, html: str) -> None:
     payload = {
-        "from": f"JOSHBOT <{from_addr}>",
+        "from": f"JOSHBOT <{frm}>",
         "to":   [FRIEND_EMAIL] + ([FRIEND_PHONE_SMTP] if FRIEND_PHONE_SMTP else []),
         "subject": "Time’s ticking – ask her out!",
         "html": html,
@@ -36,23 +33,23 @@ def send_email(from_addr: str, html: str) -> None:
     )
     r.raise_for_status()
 
-def send_sms(text: str):
+def send_sms(txt: str) -> None:
     requests.post(
         "https://textbelt.com/text",
-        data={"phone": FRIEND_PHONE_NUM, "message": text, "key": "textbelt"},
+        data={"phone": FRIEND_PHONE_NUM, "message": txt, "key": "textbelt"},
         timeout=10,
     )
 
-def job():
+def job() -> None:
     frm  = random_from()
-    html = "<p>Hey Josh — another friendly nudge ⏰.<br>Go ask her out!</p>"  # ← edit message here
+    html = "<p>Hey Josh — another friendly nudge ⏰.<br>Go ask her out!</p>"
     send_email(frm, html)
     if not FRIEND_PHONE_SMTP and FRIEND_PHONE_NUM:
         send_sms("JOSHBOT: reminder – go ask her out!")
     print(f"[{dt.datetime.now()}]  sent from {frm}")
 
 if __name__ == "__main__":
-    job()                          # immediate test send
+    job()                      # immediate test send
     while True:
         schedule.run_pending()
         time.sleep(30)
