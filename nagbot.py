@@ -19,9 +19,9 @@ def random_from() -> str:
 
 def send_email(sender: str, html: str) -> None:
     payload = {
-        "from":   f"JOSHBOT <{sender}>",
+        "from":   f"ALEX <{sender}>",
         "to":     [FRIEND_EMAIL] + ([FRIEND_PHONE_SMTP] if FRIEND_PHONE_SMTP else []),
-        "subject": "Friendly reminder – ask her out!",
+        "subject": "MONEY",
         "html":    html,
     }
     r = requests.post(
