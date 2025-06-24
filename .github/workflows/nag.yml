@@ -11,10 +11,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: |
-          echo "---- requirements.txt GitHub picked up ----"
-          cat requirements.txt
-          echo "-------------------------------------------"
-          pip install -r requirements.txt
+            - run: |
+          pip install simplelogin resend schedule python-dotenv requests
           python nagbot.py
         env: ${{ secrets }}
