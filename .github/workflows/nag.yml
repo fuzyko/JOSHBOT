@@ -2,9 +2,9 @@
 name: joshbot-scheduled
 
 on:
-  # Every 30 minutes.  Change */30 to */15 for 15-min, or use any cron you like.
   schedule:
-    - cron: "* * * * *"
+    # every 10 minutes  (00, 10, 20 … UTC)
+    - cron: "*/10 * * * *"
   workflow_dispatch:        # keeps the green “Run workflow” button
 
 jobs:
@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -25,7 +25,7 @@ jobs:
           pip install python-dotenv requests
           python nagbot.py
         env:
-          RESEND_API_KEY:    ${{ secrets.RESEND_API_KEY }}
-          FRIEND_EMAIL:      ${{ secrets.FRIEND_EMAIL }}
-          FRIEND_PHONE_SMTP: ${{ secrets.FRIEND_PHONE_SMTP }}
-          FRIEND_PHONE_NUM:  ${{ secrets.FRIEND_PHONE_NUM }}
+          RESEND_API_KEY:      ${{ secrets.RESEND_API_KEY }}
+          FRIEND_EMAILS:       ${{ secrets.FRIEND_EMAILS }}
+          FRIEND_PHONE_SMTPS:  ${{ secrets.FRIEND_PHONE_SMTPS }}
+          FRIEND_PHONE_NUMS:   ${{ secrets.FRIEND_PHONE_NUMS }}
