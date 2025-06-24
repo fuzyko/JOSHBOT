@@ -1,10 +1,8 @@
-name: daily-nudge
+# .github/workflows/nag.yml
+name: joshbot-manual
 
 on:
-  push:               # run on every commit to main
-  workflow_dispatch:  # show the “Run workflow” button
-  schedule:
-    - cron: '0 13 * * *'   # 09:00 EDT = 13:00 UTC
+  workflow_dispatch:   # ⬅️  this puts the green "Run workflow" button in Actions
 
 jobs:
   run:
@@ -16,8 +14,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install deps & run JOSHBOT
+      - name: Install deps & send once
         run: |
-          pip install simplelogin resend schedule python-dotenv requests
-          python nagbot.py          # or josbot.py if you renamed it
+          pip install resend schedule python-dotenv requests
+          python nagbot.py          # <- or josbot.py if you changed the filename
         env: ${{ secrets }}
