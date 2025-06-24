@@ -1,4 +1,4 @@
-simplelogin-python
+simplelogin
 resend
 schedule
 python-dotenv
