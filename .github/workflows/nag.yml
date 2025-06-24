@@ -16,6 +16,6 @@ jobs:
 
       - name: Install deps & send once
         run: |
-          pip install resend schedule python-dotenv requests
+          pip install resend==0.7.2 schedule python-dotenv requests
           python nagbot.py          # <- or josbot.py if you changed the filename
         env: ${{ secrets }}
