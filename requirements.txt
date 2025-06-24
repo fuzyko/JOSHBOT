@@ -1,0 +1,5 @@
+simplelogin-python
+resend
+schedule
+python-dotenv
+requests
