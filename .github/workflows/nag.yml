@@ -4,7 +4,7 @@ name: joshbot-scheduled
 on:
   # Every 30 minutes.  Change */30 to */15 for 15-min, or use any cron you like.
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "* * * * *"
   workflow_dispatch:        # keeps the green “Run workflow” button
 
 jobs:
