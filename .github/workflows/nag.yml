@@ -1,19 +1,23 @@
 name: daily-nudge
+
 on:
-  push:            # <— new line
-  workflow_dispatch:
+  push:               # run on every commit to main
+  workflow_dispatch:  # show the “Run workflow” button
   schedule:
-    - cron: '0 13 * * *'          # 09:00 EDT = 13:00 UTC
-  workflow_dispatch:              # lets you run it manually
+    - cron: '0 13 * * *'   # 09:00 EDT = 13:00 UTC
+
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-            - run: |
+
+      - name: Install deps & run JOSHBOT
+        run: |
           pip install simplelogin resend schedule python-dotenv requests
-          python nagbot.py
+          python nagbot.py          # or josbot.py if you renamed it
         env: ${{ secrets }}
