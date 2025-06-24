@@ -1,44 +1,31 @@
-# .github/workflows/nag.yml  ─── run manually only
-name: joshbot-manual
+# .github/workflows/nag.yml
+name: joshbot-scheduled
 
 on:
-  workflow_dispatch:        # ➜ puts the green “Run workflow” button
+  # Every 30 minutes.  Change */30 to */15 for 15-min, or use any cron you like.
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:        # keeps the green “Run workflow” button
 
 jobs:
-  run:
+  nudge:
     runs-on: ubuntu-latest
 
     steps:
-      # 1 ─ checkout the code on the main branch
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      # 2 ─ Python 3.11
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      # 3 ─ print first 5 lines so we can see what file the runner has
-      - name: Show first 5 lines of nagbot.py
-        run: head -n 5 nagbot.py
-
-      # 4 ─ ensure the bad import is gone; fails immediately if still present
-      - name: Verify REST-only version
+      - name: Install deps & send
         run: |
-          if grep -q "from resend import Resend" nagbot.py; then
-            echo "::error file=nagbot.py,line=1::Old SDK import still present – fix the file before running";
-            exit 1
-          fi
-
-      # 5 ─ install only the three real deps and run the bot
-      - name: Install deps & run
-        run: |
-          pip install schedule python-dotenv requests
+          pip install python-dotenv requests
           python nagbot.py
         env:
-          # secrets the script expects
-          RESEND_API_KEY:   ${{ secrets.RESEND_API_KEY }}
-          FRIEND_EMAIL:     ${{ secrets.FRIEND_EMAIL }}
+          RESEND_API_KEY:    ${{ secrets.RESEND_API_KEY }}
+          FRIEND_EMAIL:      ${{ secrets.FRIEND_EMAIL }}
           FRIEND_PHONE_SMTP: ${{ secrets.FRIEND_PHONE_SMTP }}
-          FRIEND_PHONE_NUM: ${{ secrets.FRIEND_PHONE_NUM }}
+          FRIEND_PHONE_NUM:  ${{ secrets.FRIEND_PHONE_NUM }}
