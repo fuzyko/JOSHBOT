@@ -40,5 +40,5 @@ jobs:
           # secrets the script expects
           RESEND_API_KEY:   ${{ secrets.RESEND_API_KEY }}
           FRIEND_EMAIL:     ${{ secrets.FRIEND_EMAIL }}
-          FRIEND_PHONE_SMTP:${{ secrets.FRIEND_PHONE_SMTP }}
+          FRIEND_PHONE_SMTP: ${{ secrets.FRIEND_PHONE_SMTP }}
           FRIEND_PHONE_NUM: ${{ secrets.FRIEND_PHONE_NUM }}
