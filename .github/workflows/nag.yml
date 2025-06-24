@@ -14,8 +14,9 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install deps & send once
+      - name: Show first 10 lines of nagbot.py   # << add this between checkout and install
         run: |
+          head -n 10 nagbot.py
           pip install schedule python-dotenv requests
           python nagbot.py          # <- or josbot.py if you changed the filename
         env: ${{ secrets }}
